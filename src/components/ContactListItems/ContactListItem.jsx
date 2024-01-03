@@ -1,6 +1,6 @@
 import css from './ContactListItem.module.css';
 
-export const ContactListItem = ({ id, name, number, deleteContact }) => {
+export default function ContactListItem({ id, name, number, deleteContact }) {
   return (
     <li className={css.item}>
       <p>
@@ -16,4 +16,4 @@ export const ContactListItem = ({ id, name, number, deleteContact }) => {
       </button>
     </li>
   );
-};
+}

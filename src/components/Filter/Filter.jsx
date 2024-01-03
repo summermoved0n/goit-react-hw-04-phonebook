@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import css from './Filter.module.css';
 
-export const Filter = ({ value, onChange }) => {
+export default function Filter({ value, onChange }) {
   const inputFilterId = nanoid();
 
   return (
@@ -17,4 +17,4 @@ export const Filter = ({ value, onChange }) => {
       />
     </label>
   );
-};
+}
