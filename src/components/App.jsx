@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
 
 import ContactForm from './ContactForm/ContactForm';
@@ -6,11 +6,17 @@ import Filter from './Filter/Filter';
 import ContactList from './ContactList/ContactList';
 import css from './App.module.css';
 
-// const LS_KEY = 'phonebook';
+const LS_KEY = 'phonebook';
 
 export default function App() {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(() => {
+    return JSON.parse(localStorage.getItem(LS_KEY)) ?? [];
+  });
   const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem(LS_KEY, JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContact = data => {
     const { name, number } = data;
@@ -31,13 +37,11 @@ export default function App() {
     };
     console.log(contact);
 
-    setContacts([contacts]);
+    setContacts(prevState => [...prevState, contact]);
   };
 
   const deleteContact = id => {
-    setContacts(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
-    }));
+    setContacts(prevState => prevState.filter(contact => contact.id !== id));
   };
 
   const handleFilter = e => {
@@ -47,7 +51,6 @@ export default function App() {
 
   const showFilteredContacts = () => {
     const normalizedFilter = filter.toLowerCase();
-
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
@@ -63,7 +66,7 @@ export default function App() {
         <p className={css.app_text}>Your contacts list is empty.</p>
       ) : (
         <ContactList
-          contacts={showFilteredContacts}
+          contacts={showFilteredContacts()}
           deleteContact={deleteContact}
         />
       )}
